@@ -1,104 +1,156 @@
-{% extends 'InstructorGeneral.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<meta name="description" content="Eduleb - Education HTML Template">
+	<meta name="keywords" content="agency, business, corporate, creative">
+
+	<title>Eduleb - Education HTML Template</title>
+
+	<link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@100..1000&family=Jost:wght@100..900&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="{% static 'assets/fonts/font-awesome.min.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/fonts/themify-icons.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/owlcarousel/css/owl.carousel.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/owlcarousel/css/owl.theme.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/jquery-simple-mobilemenu.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/magnific-popup.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/animate.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.5.0/css/fileinput.min.css">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.5.0/js/fileinput.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<!-- DATATABLES CSS -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css">
+</head>
+
+<body>
+
+<!-- PRELOADER -->
+<div class="preloaders">
+	<span class="loader"></span>
+</div>
+
+<!-- NAVBAR -->
+<div id="navigation" class="navbar-light bg-faded site-navigation">
+	<div class="container-fluid">
+		<div class="row">
+
+			<!-- LOGO -->
+			<div class="col-20 align-self-center">
+				<div class="site-logo">
+					<a href="/">
+						<img src="{% static 'assets/img/logo.png' %}" alt="">
+					</a>
+				</div>
+			</div>
+
+			<!-- MENU SOLO 3 OPCIONES -->
+			<div class="col-60 d-flex justify-content-center align-self-center">
+				<nav id="main-menu">
+					<ul>
+						<li><a href="/indexinstr/">HOME </a></li>
+						<li><a href="/cursos/">TODOS LOS CURSOS</a></li>
+                        <li><a href="/evaluarCurso/">EVALUACIÓN DE LOS CURSOS</a></li>
+                        <li><a href="/certificados/">CERTIFICADOS</a></li>
+					</ul>
+				</nav>
+			</div>
+
+			<!-- BOTONES DERECHA -->
+			<div class="col-20 d-none d-xl-block text-end align-self-center">
+				<a href="/" class="btn btn-outline-primary btn-sm me-2">
+					Cerrar Sesión
+				</a>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<!-- CONTENIDO DINÁMICO -->
 {% block contenido %}
-
-<body data-spy="scroll" data-offset="80">		
-
-<!-- START HOME -->
-<section class="home_bg hb_height" style="background-image: url({% static 'assets/img/bg/home-bg3.jpg' %}); background-size:cover; background-position:center;">
-
-    <div class="container">
-        <div class="row">
-
-            <div class="col-lg-6 col-sm-12 col-xs-12">
-
-                <div class="hero-text ht_top">
-
-                    <h1 style="color: aquamarine;">
-                        <span style="color: aqua;">GESTIONA TUS CURSOS COMO DOCENTE</span>
-                        Controla, evalúa y potencia el aprendizaje de tus estudiantes
-                    </h1>
-
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-6 col-sm-12 col-xs-12">
-
-                <div class="hero-text-img">
-                    <img src="{% static 'assets/img/home-img1.png' %}" class="img-fluid" alt="">
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
-</section>
-
-
-
-<!-- START INFO SECTION -->
-<section class="top_cat__area section-padding" style="background-image: url({% static 'assets/img/bg/shape-1.png' %});">
-
-    <div class="container">
-
-        <div class="section-title text-center">
-
-            <h2>Administra tu aula virtual de forma eficiente</h2>
-
-            <p>
-                Como docente, puedes gestionar cada aspecto de tu enseñanza: 
-                cursos, estudiantes, evaluaciones y certificaciones. 
-                Todo desde un solo lugar, sin complicaciones.
-            </p>
-
-        </div>
-
-        <div class="row">
-
-            <div class="col-lg-3 col-sm-6 col-xs-12">
-                <div class="single_tp">
-                    <span class="sc_one">01</span>
-                    <h3>Gestión de Cursos</h3>
-                    <p>Crea y administra tus cursos de forma rápida y organizada.</p>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-sm-6 col-xs-12">
-                <div class="single_tp">
-                    <span class="sc_two">02</span>
-                    <h3>Control de Estudiantes</h3>
-                    <p>Revisa inscripciones y seguimiento académico en tiempo real.</p>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-sm-6 col-xs-12">
-                <div class="single_tp">
-                    <span class="sc_three">03</span>
-                    <h3>Evaluación Académica</h3>
-                    <p>Supervisa calificaciones y rendimiento de tus alumnos.</p>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-sm-6 col-xs-12">
-                <div class="single_tp">
-                    <span class="sc_four">04</span>
-                    <h3>Certificación Automática</h3>
-                    <p>Emite certificados de manera rápida y profesional.</p>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-</body>
-
 {% endblock %}
+
+<div class="footer section-padding">
+	<div class="container">				
+		<div class="row">						
+			<div class="col-lg-4 col-sm-6 col-xs-12">
+				<div class="single_footer">
+					<a href="index.html"><img src="{% static 'assets/img/logo.png' %}" alt=""></a>         
+					<p> Este proyecto fue desarrollado por estudiantes de la Universidad Técnica de Cotopaxi.</p>
+                    <p>Esteban Ochoa y Lisbeth Taco</p>
+				</div>			
+			</div>						
+			<div class="col-lg-4 col-sm-6 col-xs-12">
+				<div class="single_footer">
+					<center><h4>Información </h4></center>
+					<div class="sf_contact">
+						<span class="ti-map"></span>
+						<p>CAMPUS LA MATRIZ: Av. Simón Rodríguez s/n Barrio El Ejido Sector San Felipe. Latacunga - Ecuador.</p>
+					</div>
+					<div class="sf_contact">
+						<span class="ti-mobile"></span>
+						<p>+593 96 904 8598</p>
+                        <p>+593 96 060 1086</p>
+					</div>
+					<div class="sf_contact">
+						<span class="ti-email"></span>
+						<p>esteban.ochoa8693@utc.edu.ec</p>
+                        <p>lisbeth.taco4547@utc.edu.ec</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- FOOTER COPYRIGHT -->
+<div class="foot_copy">
+	<div class="footer_copyright">
+		<p>&copy; 2024. All Rights Reserved by <a href="https://bestwpware.com/">Bestwpware</a> • Distributed by <a href="https://themewagon.com">ThemeWagon</a></p>
+	</div>	
+</div>
+	<!-- Latest jQuery -->
+		<script src="{% static 'assets/js/jquery-1.12.4.min.js' %}"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+	<!-- Latest compiled and minified Bootstrap -->
+		<script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+	<!-- modernizer JS -->		
+		<script src="{% static 'assets/js/modernizr-2.8.3.min.js' %}"></script>	
+	<!-- jquery-simple-mobilemenu.min -->
+		<script src="{% static 'assets/js/jquery-simple-mobilemenu.js' %}"></script>		
+	<!-- owl-carousel min js  -->
+		<script src="{% static 'assets/owlcarousel/js/owl.carousel.min.js' %}"></script>					
+	<!-- magnific-popup js -->               
+		<script src="{% static 'assets/js/jquery.magnific-popup.min.js' %}"></script>						
+	<!-- countTo js -->
+		<script src="{% static 'assets/js/jquery.inview.min.js' %}"></script>								
+	<!-- scrolltopcontrol js -->
+		<script src="{% static 'assets/js/scrolltopcontrol.js' %}"></script>			
+	<!-- WOW - Reveal Animations When You Scroll -->
+		<script src="{% static 'assets/js/wow.min.js' %}"></script>				
+	<!-- scripts js -->
+		<script src="{% static 'assets/js/scripts.js' %}"></script>
+		<!-- DATATABLES JS -->
+	<script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
+</body>
+<!-- Bootstrap 5 CDN JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</html>
+
