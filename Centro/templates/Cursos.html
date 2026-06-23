@@ -1,0 +1,194 @@
+{% extends 'InstructorGeneral.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<section class="section-padding" style="background:#f8f9fa; min-height:100vh;">
+
+    <div class="container">
+
+        <!-- TITULO -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+
+                <h2 style="font-weight:700;">
+                    Gestión de Cursos
+                </h2>
+
+                <p>
+                    Administra los cursos disponibles dentro de la plataforma educativa.
+                </p>
+
+            </div>
+        </div>
+
+
+        <!-- BOTON -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+
+                <a href="/nuevoCurso/" class="btn btn-primary">
+                    <i class="fa fa-plus-circle"></i>
+                    Agregar Nuevo Curso
+                </a>
+
+            </div>
+        </div>
+
+
+        <!-- TABLA -->
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered table-hover" id="tbl_cursos">
+
+                        <thead style="background:#0d6efd; color:white;">
+
+                            <tr>
+                                <th>ID</th>
+                                <th>Foto</th>
+                                <th>Nombre del Curso</th>
+                                <th>Modalidad</th>
+                                <th>Categoría</th>
+                                <th>Fecha Lanzamiento</th>
+                                <th>Material Descargable</th>
+                                <th>Acciones</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for curso in cursos %}
+                            <tr>
+
+                                <td>{{ curso.id }}</td>
+
+                                <td>
+                                    {% if curso.foto %}
+                                        <img src="{{ curso.foto.url }}" width="90" style="border-radius:8px;">
+                                    {% else %}
+                                        <span>Sin imagen</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ curso.nombre }}</td>
+
+                                <td>{{ curso.modalidad }}</td>
+
+                                <td>{{ curso.categoria }}</td>
+
+                                <td>{{ curso.fecha_lanzamiento }}</td>
+
+                                <td>
+
+                                    {% if curso.foto %}
+                                        <center>
+                                            <a href="{{ curso.foto.url }}" download class="btn btn-primary btn-sm" title="Descargar imagen">
+                                                <i class="fa fa-download"></i>
+                                            </a>
+                                        </center>
+                                    {% else %}
+                                        <span>Sin imagen</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+
+                                    <!-- EDITAR -->
+                                    <a href="/editarCurso/{{ curso.id }}/" class="btn btn-warning btn-sm">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+
+                                    <!-- ELIMINAR -->
+                                    <a href="#" class="btn btn-danger btn-sm btn-eliminar"
+                                    data-url="/eliminarCurso/{{ curso.id }}/">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center">
+                                    No hay cursos registrados
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<script>
+
+document.querySelectorAll(".btn-eliminar").forEach(btn => {
+
+    btn.addEventListener("click", function(e){
+        e.preventDefault();
+
+        let url = this.getAttribute("data-url");
+
+        Swal.fire({
+            title: "¿Estás seguro?",
+            text: "Este curso se eliminará permanentemente",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                window.location.href = url;  // 🔥 AQUÍ SE ELIMINA REALMENTE
+
+                Swal.fire({
+                    title: "Eliminado",
+                    text: "El curso fue eliminado correctamente",
+                    icon: "success",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
+
+        });
+
+    });
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    new DataTable("#tbl_cursos", {
+        language: {
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ cursos",
+            paginate: {
+                first: "Primero",
+                last: "Último",
+                next: "Siguiente",
+                previous: "Anterior"
+            },
+            zeroRecords: "No se encontraron resultados"
+        }
+    });
+
+});
+</script>
+{% endblock %}
