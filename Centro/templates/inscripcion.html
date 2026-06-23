@@ -1,0 +1,176 @@
+{% extends 'EstudianteGeneral.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<section style="background:#f4f6f9; min-height:100vh; padding:40px 0;">
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+
+            <div class="p-4 rounded shadow-sm bg-white">
+
+                <h2 style="font-weight:800; margin:0;">
+                    <i class="fa fa-user-plus"></i> Inscripción a Cursos
+                </h2>
+
+                <p class="text-muted" style="margin:0;">
+                    Usuario actual: <strong>{{ request.user.username }}</strong>
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="row mb-4">
+
+        <div class="col-md-6 offset-md-3">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-primary text-white">
+                    Cursos disponibles
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST" action="/inscribir/">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+
+                            <label class="form-label">Seleccione un curso</label>
+
+                            <select name="curso" class="form-control" required>
+
+                                <option value="">-- Seleccione --</option>
+
+                                {% for c in cursos %}
+                                    <option value="{{ c.id }}">
+                                        {{ c.nombre }}
+                                    </option>
+                                {% empty %}
+                                    <option disabled>
+                                        No hay cursos disponibles
+                                    </option>
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fa fa-check"></i> Inscribirme
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CURSOS INSCRITOS -->
+    <div class="row">
+
+        <div class="col-md-10 offset-md-1">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-dark text-white">
+                    Cursos Inscritos
+                </div>
+
+                <div class="card-body">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle" id="tabla_inscripciones">
+
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Curso</th>
+                                    <th>Fecha</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for i in inscripciones %}
+
+                                <tr>
+                                    <td>
+                                        {{ i.curso.nombre }}
+                                    </td>
+
+                                    <td>
+                                        {{ i.id }}
+                                    </td>
+
+                                    <td>
+                                        <a href="/eliminarInscripcion/{{ i.id }}/"
+                                           class="btn btn-danger btn-sm">
+                                            <i class="fa fa-trash"></i> Eliminar
+                                        </a>
+                                    </td>
+                                </tr>
+
+                                {% empty %}
+
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">
+                                        No estás inscrito en ningún curso
+                                    </td>
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    new DataTable("#tabla_inscripciones", {
+        language: {
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ inscripciones",
+            paginate: {
+                first: "Primero",
+                last: "Último",
+                next: "Siguiente",
+                previous: "Anterior"
+            },
+            zeroRecords: "No se encontraron resultados"
+        }
+    });
+
+});
+</script>
+
+{% endblock %}
