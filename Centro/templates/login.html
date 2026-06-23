@@ -1,0 +1,81 @@
+{% extends 'PlantillaGeneral.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<body data-spy="scroll" data-offset="80">
+
+<!-- START LOGIN HERO -->
+<section class="home_bg hb_height" style="background-image: url({% static 'assets/img/bg/home-bg.jpg' %}); background-size:cover; background-position:center center;">
+    <div class="container">
+        <div class="row align-items-center">
+
+            <!-- TEXTO IZQUIERDA -->
+            <div class="col-lg-6 col-sm-12">
+                <div class="hero-text ht_top">
+                    <h1>
+                        <span>BIENVENIDO DE NUEVO</span>
+                        Accede a tu cuenta
+                    </h1>
+
+                    <p>
+                        Inicia sesión como estudiante o instructor para acceder a tus cursos, certificados y herramientas de aprendizaje.
+                        Continúa tu formación y mejora tu perfil profesional.
+                    </p>
+                </div>
+            </div>
+
+            <!-- FORMULARIO DERECHA -->
+            <div class="col-lg-6 col-sm-12">
+
+                <div class="register-box" style="background:#fff; padding:30px; border-radius:10px;">
+
+                    <h3 style="margin-bottom:20px;">Iniciar Sesión</h3>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- USUARIO -->
+                        <div class="form-group">
+                            <label>Usuario</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+
+                        <!-- PASSWORD -->
+                        <div class="form-group">
+                            <label>Contraseña</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+
+                        <br>
+
+                        <button type="submit" class="btn btn-primary" style="width:100%;">
+                            Entrar
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% if messages %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        {% for message in messages %}
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '{{ message }}'
+            });
+        {% endfor %}
+    </script>
+{% endif %}
+</body>
+
+{% endblock %}

@@ -1,0 +1,208 @@
+{% extends 'PlantillaGeneral.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<body data-spy="scroll" data-offset="80">
+
+    <!-- START REGISTER HERO -->
+    <section class="home_bg hb_height" style="background-image: url({% static 'assets/img/bg/home-bg.jpg' %}); background-size:cover; background-position:center center;">
+        <div class="container">
+            <div class="row align-items-center">
+
+                <!-- TEXTO IZQUIERDA -->
+                <div class="col-lg-6 col-sm-12">
+                    <div class="hero-text ht_top">
+                        <h1>
+                            <span>ÚNETE A NUESTRA PLATAFORMA</span>
+                            Crea tu cuenta y comienza a aprender
+                        </h1>
+
+                        <p>
+                            Regístrate como estudiante o instructor y accede a cursos, certificaciones y oportunidades de crecimiento profesional.
+                            Forma parte de una comunidad de aprendizaje moderno y certificado.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FORMULARIO DERECHA -->
+                <div class="col-lg-6 col-sm-12">
+
+                    <div class="register-box" style="background:#fff; padding:30px; border-radius:10px;">
+
+                        <h3 style="margin-bottom:20px;">Registro de Usuario</h3>
+
+                        <form method="POST" id="formRegistro">
+                            {% csrf_token %}
+
+                            <!-- USUARIO -->
+                            <div class="form-group">
+                                <label>Usuario</label>
+                                <input type="text" name="username" id="username" class="form-control">
+                                <span class="error" id="errorUsername"></span>
+                            </div>
+
+                            <!-- EMAIL -->
+                            <div class="form-group">
+                                <label>Correo</label>
+                                <input type="email" name="email" id="email" class="form-control">
+                                <span class="error" id="errorEmail"></span>
+                            </div>
+
+                            <!-- PASSWORD -->
+                            <div class="form-group">
+                                <label>Contraseña</label>
+                                <input type="password" name="password" id="password" class="form-control">
+                                <span class="error" id="errorPassword"></span>
+                            </div>
+
+                            <!-- ROL -->
+                            <div class="form-group">
+                                <label>Tipo de Usuario</label>
+                                <select name="tipo_usuario" id="tipo_usuario" class="form-control">
+                                    <option value="">Seleccione...</option>
+                                    <option value="alumno">Alumno</option>
+                                    <option value="instructor">Instructor</option>
+                                </select>
+                                <span class="error" id="errorTipo"></span>
+                            </div>
+
+                            <br>
+
+                            <button type="submit" class="btn btn-primary" style="width:100%;">
+                                Crear Cuenta
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</body>
+
+
+<style>
+    .error{
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+        display: block;
+        font-weight: 500;
+    }
+
+    .input-error{
+        border: 2px solid #dc3545 !important;
+    }
+</style>
+
+
+<script>
+
+document.getElementById("formRegistro").addEventListener("submit", function(e){
+
+    let valido = true;
+
+    let username = document.getElementById("username");
+    let email = document.getElementById("email");
+    let password = document.getElementById("password");
+    let tipo = document.getElementById("tipo_usuario");
+
+    // limpiar errores anteriores
+    limpiarCampo(username, "errorUsername");
+    limpiarCampo(email, "errorEmail");
+    limpiarCampo(password, "errorPassword");
+    limpiarCampo(tipo, "errorTipo");
+
+
+    // USERNAME
+    if(username.value.trim() === ""){
+        mostrarError(username, "errorUsername", "Ingrese un usuario");
+        valido = false;
+    }
+    else if(username.value.length < 4){
+        mostrarError(username, "errorUsername", "Mínimo 4 caracteres");
+        valido = false;
+    }
+    else if(username.value.includes(" ")){
+        mostrarError(username, "errorUsername", "No se permiten espacios");
+        valido = false;
+    }
+
+
+    // EMAIL
+    let emailRegex = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+    if(email.value.trim() === ""){
+        mostrarError(email, "errorEmail", "Ingrese un correo");
+        valido = false;
+    }
+    else if(!emailRegex.test(email.value)){
+        mostrarError(email, "errorEmail", "Correo inválido");
+        valido = false;
+    }
+
+
+    // PASSWORD
+    if(password.value.trim() === ""){
+        mostrarError(password, "errorPassword", "Ingrese una contraseña");
+        valido = false;
+    }
+    else if(password.value.length < 6){
+        mostrarError(password, "errorPassword", "Mínimo 6 caracteres");
+        valido = false;
+    }
+
+
+    // SELECT
+    if(tipo.value === ""){
+        mostrarError(tipo, "errorTipo", "Seleccione un tipo de usuario");
+        valido = false;
+    }
+
+
+    if(!valido){
+        e.preventDefault();
+    }
+
+});
+
+
+function mostrarError(campo, errorId, mensaje){
+    campo.classList.add("input-error");
+    document.getElementById(errorId).textContent = mensaje;
+}
+
+
+function limpiarCampo(campo, errorId){
+    campo.classList.remove("input-error");
+    document.getElementById(errorId).textContent = "";
+}
+
+</script>
+
+
+{% if registro_exitoso %}
+
+<script>
+
+Swal.fire({
+    title: "Registro exitoso",
+    text: "USUARIO CREADO EXITOSAMENTE",
+    icon: "success",
+    confirmButtonText: "OK"
+}).then((result) => {
+    if(result.isConfirmed){
+        window.location.href = "/";
+    }
+});
+
+</script>
+
+{% endif %}
+
+{% endblock %}
