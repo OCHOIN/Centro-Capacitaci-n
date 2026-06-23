@@ -1,0 +1,104 @@
+{% extends 'InstructorGeneral.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<body data-spy="scroll" data-offset="80">		
+
+<!-- START HOME -->
+<section class="home_bg hb_height" style="background-image: url({% static 'assets/img/bg/home-bg3.jpg' %}); background-size:cover; background-position:center;">
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-6 col-sm-12 col-xs-12">
+
+                <div class="hero-text ht_top">
+
+                    <h1 style="color: aquamarine;">
+                        <span style="color: aqua;">GESTIONA TUS CURSOS COMO DOCENTE</span>
+                        Controla, evalúa y potencia el aprendizaje de tus estudiantes
+                    </h1>
+
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6 col-sm-12 col-xs-12">
+
+                <div class="hero-text-img">
+                    <img src="{% static 'assets/img/home-img1.png' %}" class="img-fluid" alt="">
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+
+<!-- START INFO SECTION -->
+<section class="top_cat__area section-padding" style="background-image: url({% static 'assets/img/bg/shape-1.png' %});">
+
+    <div class="container">
+
+        <div class="section-title text-center">
+
+            <h2>Administra tu aula virtual de forma eficiente</h2>
+
+            <p>
+                Como docente, puedes gestionar cada aspecto de tu enseñanza: 
+                cursos, estudiantes, evaluaciones y certificaciones. 
+                Todo desde un solo lugar, sin complicaciones.
+            </p>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+                <div class="single_tp">
+                    <span class="sc_one">01</span>
+                    <h3>Gestión de Cursos</h3>
+                    <p>Crea y administra tus cursos de forma rápida y organizada.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+                <div class="single_tp">
+                    <span class="sc_two">02</span>
+                    <h3>Control de Estudiantes</h3>
+                    <p>Revisa inscripciones y seguimiento académico en tiempo real.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+                <div class="single_tp">
+                    <span class="sc_three">03</span>
+                    <h3>Evaluación Académica</h3>
+                    <p>Supervisa calificaciones y rendimiento de tus alumnos.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+                <div class="single_tp">
+                    <span class="sc_four">04</span>
+                    <h3>Certificación Automática</h3>
+                    <p>Emite certificados de manera rápida y profesional.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+</body>
+
+{% endblock %}
