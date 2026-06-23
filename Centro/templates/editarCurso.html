@@ -1,0 +1,248 @@
+{% extends 'InstructorGeneral.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<section class="section-padding" style="background:#f8f9fa; min-height:100vh;">
+
+<div class="container">
+
+<div class="row">
+<div class="col-md-8 offset-md-2">
+
+<div style="background:white; padding:35px; border-radius:10px;">
+
+<h2><b>Editar Curso</b></h2>
+<p>Actualice la información del curso</p>
+
+<hr>
+
+<form method="POST" enctype="multipart/form-data" id="formEditarCurso">
+    {% csrf_token %}
+
+    <!-- FOTO -->
+    <!-- FOTO -->
+    <div class="form-group mb-3">
+
+        <label>Imagen del Curso</label>
+
+        <input
+            id="foto"
+            name="foto"
+            type="file"
+            class="file"
+            accept="image/*">
+
+        <span class="error" id="error_foto"></span>
+
+    </div>
+
+    <!-- NOMBRE -->
+    <div class="form-group mb-3">
+        <label>Nombre del Curso</label>
+        <input type="text"
+               name="nombre"
+               id="nombre"
+               class="form-control"
+               value="{{ curso.nombre }}">
+        <span class="error" id="error_nombre"></span>
+    </div>
+
+    <!-- MODALIDAD -->
+    <div class="form-group mb-3">
+        <label>Modalidad</label><br>
+
+        <input type="radio" name="modalidad" value="presencial"
+            {% if curso.modalidad == "presencial" %}checked{% endif %}>
+        Presencial
+
+        &nbsp;&nbsp;
+
+        <input type="radio" name="modalidad" value="en_linea"
+            {% if curso.modalidad == "en_linea" %}checked{% endif %}>
+        En línea
+
+        <span class="error" id="error_modalidad"></span>
+    </div>
+
+    <!-- CATEGORIA -->
+    <div class="form-group mb-3">
+        <label>Categoría</label>
+
+        <select name="categoria" id="categoria" class="form-control">
+
+            <option value="">Seleccione...</option>
+
+            <option value="tecnologia" {% if curso.categoria == "tecnologia" %}selected{% endif %}>
+                Tecnología
+            </option>
+
+            <option value="idiomas" {% if curso.categoria == "idiomas" %}selected{% endif %}>
+                Idiomas
+            </option>
+
+            <option value="negocios" {% if curso.categoria == "negocios" %}selected{% endif %}>
+                Negocios
+            </option>
+
+        </select>
+
+        <span class="error" id="error_categoria"></span>
+    </div>
+
+    <!-- FECHA -->
+    <div class="form-group mb-3">
+        <label>Fecha de lanzamiento</label>
+
+        <input type="date"
+               name="fecha"
+               id="fecha"
+               class="form-control"
+               value="{{ curso.fecha_lanzamiento|date:'Y-m-d' }}">
+
+        <span class="error" id="error_fecha"></span>
+    </div>
+
+    <!-- MATERIAL -->
+    <div class="form-group mb-3">
+        <input type="checkbox"
+               name="material"
+               {% if curso.material_descargable %}checked{% endif %}>
+        ¿Material descargable?
+    </div>
+
+    <!-- BOTONES -->
+    <button type="submit" class="btn btn-primary">
+        Guardar cambios
+    </button>
+
+    <a href="/cursos/" class="btn btn-secondary">
+        Cancelar
+    </a>
+
+</form>
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- FILEINPUT (REEMPLAZO AUTOMÁTICO + PREVIEW) -->
+<!-- ========================= -->
+<script>
+$("#foto").fileinput({
+
+    allowedFileExtensions: ["jpg", "png", "jpeg"],
+    showUpload: false,
+    showRemove: true,
+    maxFileCount: 1,
+    overwriteInitial: true,   // 🔥 reemplaza automáticamente
+
+    initialPreview: [
+        {% if curso.foto %}
+            "{{ curso.foto.url }}"
+        {% endif %}
+    ],
+
+    initialPreviewAsData: true,
+    initialPreviewFileType: 'image',
+    browseLabel: "Cambiar imagen",
+    removeLabel: "Quitar",
+    dropZoneEnabled: true
+});
+</script>
+
+<!-- ========================= -->
+<!-- VALIDACIÓN FRONTEND -->
+<!-- ========================= -->
+<script>
+
+document.getElementById("formEditarCurso").addEventListener("submit", function(e){
+
+    let valido = true;
+
+    document.querySelectorAll(".error").forEach(function(el){
+        el.textContent = "";
+    });
+
+    // FOTO
+    let foto = document.getElementById("foto");
+
+    // verifica si aún existe una imagen en el preview
+    let previewExiste = document.querySelector(".file-preview-image") !== null;
+
+    if(foto.files.length === 0 && !previewExiste){
+
+        document.getElementById("error_foto").textContent =
+            "Debe seleccionar una imagen para el curso";
+
+        valido = false;
+    }
+
+    // NOMBRE
+    let nombre = document.getElementById("nombre");
+
+    if(nombre.value.trim() === ""){
+
+        document.getElementById("error_nombre").textContent =
+            "Ingrese el nombre del curso";
+
+        valido = false;
+    }
+
+    // MODALIDAD
+    let modalidad = document.querySelector('input[name="modalidad"]:checked');
+
+    if(!modalidad){
+
+        document.getElementById("error_modalidad").textContent =
+            "Seleccione una modalidad";
+
+        valido = false;
+    }
+
+    // CATEGORIA
+    let categoria = document.getElementById("categoria");
+
+    if(categoria.value === ""){
+
+        document.getElementById("error_categoria").textContent =
+            "Seleccione una categoría";
+
+        valido = false;
+    }
+
+    // FECHA
+    let fecha = document.getElementById("fecha");
+
+    if(fecha.value === ""){
+
+        document.getElementById("error_fecha").textContent =
+            "Seleccione una fecha";
+
+        valido = false;
+    }
+
+    if(!valido){
+        e.preventDefault();
+    }
+
+});
+
+</script>
+
+<style>
+.error{
+    color:red;
+    font-size:14px;
+    margin-top:5px;
+    display:block;
+}
+</style>
+
+{% endblock %}
