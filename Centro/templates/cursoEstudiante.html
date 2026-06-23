@@ -1,0 +1,83 @@
+{% extends 'EstudianteGeneral.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<section style="background:#f4f6f9; min-height:100vh; padding:40px 0;">
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+
+            <div class="p-4 rounded shadow-sm bg-white">
+
+                <h2 style="font-weight:800; margin:0;">
+                    Cursos disponibles
+                </h2>
+
+                <p class="text-muted" style="margin:0;">
+                    Explora los cursos y regístrate fácilmente
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- LISTA DE CURSOS -->
+    <div class="row">
+
+        {% for c in cursos %}
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                {% if c.foto %}
+                    <img src="{{ c.foto.url }}" class="card-img-top" style="height:200px; object-fit:cover;">
+                {% else %}
+                    <img src="{% static 'img/default-course.jpg' %}" class="card-img-top" style="height:200px; object-fit:cover;">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <h5 style="font-weight:700;">
+                        {{ c.nombre }}
+                    </h5>
+
+                    <p class="text-muted mb-1">
+                        Modalidad: {{ c.modalidad }}
+                    </p>
+
+                    <p class="text-muted mb-1">
+                        Categoría: {{ c.categoria }}
+                    </p>
+
+                    <p class="text-muted">
+                        Fecha: {{ c.fecha_lanzamiento }}
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-md-12 text-center text-muted">
+            No hay cursos disponibles en este momento
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</section>
+
+{% endblock %}
