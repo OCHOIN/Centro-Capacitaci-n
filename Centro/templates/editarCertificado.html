@@ -1,0 +1,229 @@
+{% extends 'InstructorGeneral.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<section class="section-padding" style="background:#f8f9fa; min-height:100vh;">
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+
+            <div style="background:white; padding:35px; border-radius:10px;">
+
+                <h2 style="font-weight:700;">Editar Certificado</h2>
+                <p>Actualice la información del certificado</p>
+
+                <hr>
+
+                <form method="POST" enctype="multipart/form-data" id="formCertificado">
+                    {% csrf_token %}
+
+                    <!-- CURSO -->
+                    <div class="form-group mb-3">
+                        <label>Curso</label>
+
+                        <select name="curso" id="curso" class="form-control">
+                            <option value="">Seleccione un curso</option>
+
+                            {% for c in cursos %}
+                                <option value="{{ c.id }}"
+                                    {% if certificado.curso.id == c.id %}selected{% endif %}>
+                                    {{ c.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <span class="error" id="error_curso"></span>
+                    </div>
+
+                    <!-- ALUMNO -->
+                    <div class="form-group mb-3">
+                        <label>Alumno</label>
+
+                        <select name="alumno" id="alumno" class="form-control">
+                            <option value="">Seleccione un alumno</option>
+
+                            {% for i in inscripciones %}
+                                {% if i.curso.id == certificado.curso.id %}
+                                    <option value="{{ i.alumno.id }}"
+                                        {% if certificado.alumno.id == i.alumno.id %}selected{% endif %}>
+                                        {{ i.alumno.username }}
+                                    </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+
+                        <span class="error" id="error_alumno"></span>
+                    </div>
+
+                    <!-- FECHA -->
+                    <div class="form-group mb-3">
+                        <label>Fecha de Emisión</label>
+
+                        <input type="date"
+                               name="fecha_emision"
+                               id="fecha_emision"
+                               class="form-control"
+                               value="{{ certificado.fecha_emision|date:'Y-m-d' }}">
+
+                        <span class="error" id="error_fecha"></span>
+                    </div>
+
+                    <!-- CALIFICACIÓN -->
+                    <div class="form-group mb-3">
+                        <label>Calificación Final</label>
+
+                        <input type="number"
+                               name="calificacion"
+                               id="calificacion"
+                               class="form-control"
+                               min="0"
+                               max="100"
+                               value="{{ certificado.calificacion_final }}">
+
+                        <span class="error" id="error_calificacion"></span>
+                    </div>
+
+                    <!-- ESTADO -->
+                    <div class="form-group mb-3">
+                        <label>Estado del Documento</label>
+                        <br>
+
+                        <input type="radio"
+                               name="estado"
+                               value="original"
+                               {% if certificado.estado_documento == "original" %}checked{% endif %}>
+                        Original
+
+                        &nbsp;&nbsp;&nbsp;
+
+                        <input type="radio"
+                               name="estado"
+                               value="duplicado"
+                               {% if certificado.estado_documento == "duplicado" %}checked{% endif %}>
+                        Duplicado
+
+                        <br>
+                        <span class="error" id="error_estado"></span>
+                    </div>
+
+                    <!-- PDF -->
+                    <div class="form-group mb-4">
+                        <label>Archivo PDF</label>
+
+                        <input id="archivo_pdf"
+                               name="archivo_pdf"
+                               type="file"
+                               class="file"
+                               accept="application/pdf">
+
+                        <span class="error" id="error_pdf"></span>
+                    </div>
+
+                    <!-- BOTONES -->
+                    <button type="submit" class="btn btn-primary">
+                        Guardar cambios
+                    </button>
+
+                    <a href="/certificados/" class="btn btn-secondary">
+                        Cancelar
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</section>
+
+<!-- ESTILOS -->
+<style>
+.error{
+    color:red;
+    font-size:14px;
+    margin-top:5px;
+    display:block;
+}
+</style>
+
+<!-- FILEINPUT -->
+<script>
+$("#archivo_pdf").fileinput({
+
+    allowedFileExtensions: ["pdf"],
+    showUpload: false,
+    showRemove: true,
+    maxFileCount: 1,
+    overwriteInitial: true,
+
+    initialPreview: [
+        {% if certificado.archivo_pdf %}
+            "{{ certificado.archivo_pdf.url }}"
+        {% endif %}
+    ],
+
+    initialPreviewAsData: true,
+    initialPreviewFileType: "pdf",
+    browseLabel: "Cambiar PDF"
+});
+</script>
+
+<!-- VALIDACIÓN -->
+<script>
+document.getElementById("formCertificado").addEventListener("submit", function(e){
+
+    let valido = true;
+
+    document.querySelectorAll(".error").forEach(el => el.textContent = "");
+
+    let curso = document.getElementById("curso");
+    let alumno = document.getElementById("alumno");
+    let fecha = document.getElementById("fecha_emision");
+    let calificacion = document.getElementById("calificacion");
+    let estado = document.querySelector('input[name="estado"]:checked');
+    let pdf = document.getElementById("archivo_pdf");
+
+    if(curso.value === ""){
+        document.getElementById("error_curso").textContent = "Seleccione un curso";
+        valido = false;
+    }
+
+    if(alumno.value === ""){
+        document.getElementById("error_alumno").textContent = "Seleccione un alumno";
+        valido = false;
+    }
+
+    if(fecha.value === ""){
+        document.getElementById("error_fecha").textContent = "Seleccione la fecha";
+        valido = false;
+    }
+
+    if(calificacion.value === "" || calificacion.value < 70 || calificacion.value > 100){
+        document.getElementById("error_calificacion").textContent = "Calificación inválida, debe estar entre 70 y 100";
+        valido = false;
+    }
+
+    if(!estado){
+        document.getElementById("error_estado").textContent = "Seleccione estado";
+        valido = false;
+    }
+
+    if(!pdf.files.length && !document.querySelector(".file-preview-frame")){
+        document.getElementById("error_pdf").textContent = "Debe subir un PDF";
+        valido = false;
+    }
+
+    if(!valido){
+        e.preventDefault();
+    }
+
+});
+</script>
+
+{% endblock %}
