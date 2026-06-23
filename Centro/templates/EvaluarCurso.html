@@ -1,0 +1,232 @@
+{% extends 'InstructorGeneral.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<section style="background:#f4f6f9; min-height:100vh; padding:40px 0;">
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+
+            <div class="p-4 rounded shadow-sm" style="background:white;">
+
+                <h2 style="font-weight:800; margin-bottom:5px;">
+                    <i class="fa fa-chart-line"></i> Evaluación de Cursos
+                </h2>
+
+                <p style="color:#6c757d; margin:0;">
+                    Análisis automático de rendimiento académico y eficiencia de cursos
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- RESUMEN -->
+    <div class="row mb-4">
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+
+                    <h5 style="color:#007bff;">
+                        <i class="fa fa-chart-bar"></i> Promedio General
+                    </h5>
+
+                    <h2 style="font-weight:800;">
+                        {{ promedios|length }}
+                    </h2>
+
+                    <small class="text-muted">Cursos evaluados</small>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+
+                    <h5 style="color:#28a745;">
+                        <i class="fa fa-file-alt"></i> Reportes de Eficiencia
+                    </h5>
+
+                    <h2 style="font-weight:800;">
+                        {{ eficiencia|length }}
+                    </h2>
+
+                    <small class="text-muted">Cursos analizados</small>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PROMEDIOS -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-primary text-white">
+                    <i class="fa fa-chart-line"></i> Promedio de Calificaciones por Curso
+                </div>
+
+                <div class="card-body">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Curso</th>
+                                    <th>Promedio</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for c in promedios %}
+                                <tr>
+
+                                    <td style="font-weight:600;">
+                                        <i class="fa fa-book"></i> {{ c.nombre }}
+                                    </td>
+
+                                    <td>
+                                        {% if c.promedio %}
+                                            <span class="badge bg-success fs-6">
+                                                {{ c.promedio|floatformat:2 }}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                Sin notas
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">
+                                        No hay datos disponibles
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- EFICIENCIA -->
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-dark text-white">
+                    <i class="fa fa-file"></i> Reporte de Eficiencia (Inscritos vs Certificados)
+                </div>
+
+                <div class="card-body">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered table-hover align-middle">
+
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Curso</th>
+                                    <th>Inscritos</th>
+                                    <th>Certificados</th>
+                                    <th>Eficiencia</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for e in eficiencia %}
+                                <tr>
+
+                                    <td style="font-weight:600;">
+                                        <i class="fa fa-book"></i> {{ e.curso }}
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-primary">
+                                            {{ e.inscritos }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-success">
+                                            {{ e.certificados }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+
+                                        {% if e.inscritos > 0 %}
+
+                                            {% if e.porcentaje >= 70 %}
+                                                <span class="badge bg-success">
+                                                    {{ e.porcentaje }}% Alto
+                                                </span>
+
+                                            {% elif e.porcentaje >= 40 %}
+                                                <span class="badge bg-warning text-dark">
+                                                    {{ e.porcentaje }}% Medio
+                                                </span>
+
+                                            {% else %}
+                                                <span class="badge bg-danger">
+                                                    {{ e.porcentaje }}% Bajo
+                                                </span>
+                                            {% endif %}
+
+                                        {% else %}
+                                            <span class="text-muted">Sin datos</span>
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">
+                                        No hay información disponible
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+{% endblock %}
