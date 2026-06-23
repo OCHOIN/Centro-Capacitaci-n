@@ -1,0 +1,250 @@
+{% extends 'InstructorGeneral.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<section class="section-padding" style="background:#f8f9fa; min-height:100vh;">
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+
+            <div style="background:white; padding:35px; border-radius:10px;">
+
+                <h2 style="font-weight:700;">Generar Certificado</h2>
+                <p>Complete la información para emitir el certificado</p>
+
+                <hr>
+
+                <form method="POST" enctype="multipart/form-data" id="formCertificado">
+                    {% csrf_token %}
+
+                    <!-- CURSO -->
+                    <div class="form-group mb-3">
+                        <label>Curso</label>
+
+                        <select name="curso" id="curso" class="form-control">
+                            <option value="">Seleccione un curso</option>
+                            {% for c in cursos %}
+                                <option value="{{ c.id }}">{{ c.nombre }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <span class="error" id="error_curso"></span>
+                    </div>
+
+                    <!-- ALUMNO (DINÁMICO) -->
+                    <div class="form-group mb-3">
+                        <label>Alumno</label>
+
+                        <select name="alumno" id="alumno" class="form-control">
+                            <option value="">Primero seleccione un curso</option>
+                        </select>
+
+                        <span class="error" id="error_alumno"></span>
+                    </div>
+
+                    <!-- FECHA -->
+                    <div class="form-group mb-3">
+                        <label>Fecha de Emisión</label>
+                        <input type="date" name="fecha_emision" id="fecha_emision" class="form-control">
+                        <span class="error" id="error_fecha"></span>
+                    </div>
+
+                    <!-- CALIFICACIÓN -->
+                    <div class="form-group mb-3">
+                        <label>Calificación Final</label>
+                        <input type="number" name="calificacion" id="calificacion"
+                               class="form-control" min="0" max="100">
+                        <span class="error" id="error_calificacion"></span>
+                    </div>
+
+                    <!-- ESTADO -->
+                    <div class="form-group mb-3">
+                        <label>Estado del Documento</label>
+                        <br>
+
+                        <input type="radio" name="estado" value="original" id="original">
+                        <label for="original">Original</label>
+
+                        &nbsp;&nbsp;&nbsp;
+
+                        <input type="radio" name="estado" value="duplicado" id="duplicado">
+                        <label for="duplicado">Duplicado</label>
+
+                        <br>
+                        <span class="error" id="error_estado"></span>
+                    </div>
+
+                    <!-- PDF -->
+                    <div class="form-group mb-4">
+                        <label>Archivo PDF del Certificado</label>
+
+                        <input id="archivo_pdf"
+                               name="archivo_pdf"
+                               type="file"
+                               class="file"
+                               accept="application/pdf">
+
+                        <span class="error" id="error_pdf"></span>
+                    </div>
+
+                    <!-- BOTONES -->
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-save"></i> Generar Certificado
+                    </button>
+
+                    <a href="/certificados/" class="btn btn-secondary">
+                        Cancelar
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- ESTILOS -->
+<!-- ========================= -->
+<style>
+.error{
+    color:red;
+    font-size:14px;
+    margin-top:5px;
+    display:block;
+}
+</style>
+
+<!-- ========================= -->
+<!-- FILEINPUT -->
+<!-- ========================= -->
+<script>
+$("#archivo_pdf").fileinput({
+    allowedFileExtensions: ["pdf"],
+    showUpload: false,
+    showRemove: true,
+    maxFileCount: 1,
+    dropZoneEnabled: true,
+    overwriteInitial: true,
+    browseLabel: "Seleccionar PDF",
+    dropZoneTitle: "Arrastra el PDF aquí"
+});
+</script>
+
+<!-- ========================= -->
+<!-- FILTRO CURSO → ALUMNOS -->
+<!-- ========================= -->
+<script>
+
+document.getElementById("curso").addEventListener("change", function(){
+
+    let cursoSeleccionado = this.value;
+    let alumnoSelect = document.getElementById("alumno");
+
+    alumnoSelect.innerHTML = '<option value="">Seleccione un alumno</option>';
+
+    let encontrados = 0;
+
+    {% for i in inscripciones %}
+
+        if(cursoSeleccionado == "{{ i.curso.id }}"){
+
+            let option = document.createElement("option");
+            option.value = "{{ i.alumno.id }}";
+            option.text = "{{ i.alumno.username }}";
+
+            alumnoSelect.appendChild(option);
+
+            encontrados++;
+        }
+
+    {% endfor %}
+
+    if(encontrados === 0 && cursoSeleccionado !== ""){
+        alumnoSelect.innerHTML =
+            '<option value="">No hay alumnos matriculados</option>';
+    }
+
+});
+
+</script>
+
+<!-- ========================= -->
+<!-- VALIDACIÓN FRONTEND -->
+<!-- ========================= -->
+<script>
+
+document.getElementById("formCertificado").addEventListener("submit", function(e){
+
+    let valido = true;
+
+    document.querySelectorAll(".error").forEach(el => el.textContent = "");
+
+    let alumno = document.getElementById("alumno");
+    let curso = document.getElementById("curso");
+    let fecha = document.getElementById("fecha_emision");
+    let calificacion = document.getElementById("calificacion");
+    let estado = document.querySelector('input[name="estado"]:checked');
+    let pdf = document.getElementById("archivo_pdf");
+
+    if(curso.value === ""){
+        document.getElementById("error_curso").textContent = "Seleccione un curso";
+        valido = false;
+    }
+
+    if(alumno.value === ""){
+        document.getElementById("error_alumno").textContent = "Seleccione un alumno";
+        valido = false;
+    }
+
+    if(fecha.value === ""){
+        document.getElementById("error_fecha").textContent = "Seleccione la fecha";
+        valido = false;
+    }
+
+    if(calificacion.value === "" || calificacion.value < 70 || calificacion.value > 100){
+        document.getElementById("error_calificacion").textContent = "Calificación inválida (Notas para aprobar: 70-100)";
+        valido = false;
+    }
+
+    if(!estado){
+        document.getElementById("error_estado").textContent = "Seleccione estado";
+        valido = false;
+    }
+
+    if(pdf.files.length === 0){
+        document.getElementById("error_pdf").textContent = "Debe subir un PDF";
+        valido = false;
+    }
+
+    if(!valido){
+        e.preventDefault();
+    }
+
+});
+
+</script>
+
+<!-- ========================= -->
+<!-- SWEETALERT -->
+<!-- ========================= -->
+{% if messages %}
+<script>
+{% for message in messages %}
+Swal.fire({
+    icon: '{% if message.tags == "error" %}error{% else %}success{% endif %}',
+    title: 'Mensaje',
+    text: '{{ message|escapejs }}'
+});
+{% endfor %}
+</script>
+{% endif %}
+
+{% endblock %}
