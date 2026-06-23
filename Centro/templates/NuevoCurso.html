@@ -1,0 +1,265 @@
+{% extends 'InstructorGeneral.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<section class="section-padding" style="background:#f8f9fa; min-height:100vh;">
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+
+                <div style="background:white; padding:35px; border-radius:10px;">
+
+                    <h2 style="font-weight:700;">
+                        Registrar Nuevo Curso
+                    </h2>
+
+                    <p>
+                        Complete correctamente la información del curso.
+                    </p>
+
+                    <hr>
+
+
+                    <!-- FORMULARIO -->
+                    <form method="POST" enctype="multipart/form-data" id="formCurso">
+
+                        {% csrf_token %}
+
+                        <!-- FOTO -->
+                        <div class="form-group mb-3">
+
+                            <label>Banner o Portada del Curso</label>
+
+                            <input 
+                                id="foto"
+                                name="foto"
+                                type="file"
+                                class="file"
+                                accept="image/*">
+
+                            <span class="error" id="error_foto"></span>
+
+                        </div>
+
+
+                        <!-- NOMBRE -->
+                        <div class="form-group mb-3">
+                            <label>Nombre del Curso</label>
+
+                            <input
+                                type="text"
+                                name="nombre"
+                                id="nombre"
+                                class="form-control">
+
+                            <span class="error" id="error_nombre"></span>
+                        </div>
+
+
+                        <!-- MODALIDAD -->
+                        <div class="form-group mb-3">
+
+                            <label>Modalidad</label>
+                            <br>
+
+                            <input type="radio" name="modalidad" value="Presencial">
+                            Presencial
+
+                            &nbsp;&nbsp;&nbsp;
+
+                            <input type="radio" name="modalidad" value="En Línea">
+                            En Línea
+
+                            <br>
+                            <span class="error" id="error_modalidad"></span>
+
+                        </div>
+
+
+                        <!-- CATEGORIA -->
+                        <div class="form-group mb-3">
+
+                            <label>Categoría</label>
+
+                            <select name="categoria" id="categoria" class="form-control">
+
+                                <option value="">Seleccione...</option>
+                                <option value="Tecnologia">Tecnología</option>
+                                <option value="Idiomas">Idiomas</option>
+                                <option value="Negocios">Negocios</option>
+
+                            </select>
+
+                            <span class="error" id="error_categoria"></span>
+
+                        </div>
+
+
+                        <!-- FECHA -->
+                        <div class="form-group mb-3">
+
+                            <label>Fecha de Lanzamiento</label>
+
+                            <input
+                                type="date"
+                                name="fecha"
+                                id="fecha"
+                                class="form-control">
+
+                            <span class="error" id="error_fecha"></span>
+
+                        </div>
+
+
+                        <!-- MATERIAL -->
+                        <div class="form-group mb-4">
+
+                            <input type="checkbox" name="material" id="material">
+                            ¿Incluye material descargable?
+
+                        </div>
+
+
+                        <!-- BOTONES -->
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-save"></i>
+                            Guardar Curso
+                        </button>
+
+                        <a href="/cursos/" class="btn btn-secondary">
+                            Cancelar
+                        </a>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- ESTILOS -->
+<!-- ========================= -->
+<style>
+
+    .error{
+        color: red;
+        font-size: 14px;
+        display: block;
+        margin-top: 5px;
+    }
+
+    .input-error{
+        border: 2px solid red !important;
+    }
+
+</style>
+
+
+<!-- ========================= -->
+<!-- FILE INPUT -->
+<!-- ========================= -->
+<script>
+$("#foto").fileinput({
+
+    allowedFileExtensions: ["jpg", "png", "jpeg"],
+    showCaption: true,
+    dropZoneEnabled: true,
+    showUpload: false,
+    showRemove: true,
+    browseLabel: "Seleccionar",
+    removeLabel: "Quitar",
+    dropZoneTitle: "Arrastra una imagen aquí",
+    maxFileCount: 1
+
+});
+</script>
+
+
+<!-- ========================= -->
+<!-- VALIDACIÓN FRONTEND -->
+<!-- ========================= -->
+<script>
+
+document.getElementById("formCurso").addEventListener("submit", function(e){
+
+    let valido = true;
+
+    // limpiar errores
+    document.querySelectorAll(".error").forEach(el => el.textContent = "");
+    document.querySelectorAll("input, select").forEach(el => el.classList.remove("input-error"));
+
+    // FOTO
+    let foto = document.getElementById("foto");
+
+    if(foto.files.length === 0){
+        document.getElementById("error_foto").textContent =
+            "Debe seleccionar una imagen para el curso";
+
+        valido = false;
+    }
+    // NOMBRE
+    let nombre = document.getElementById("nombre");
+    if(nombre.value.trim() === ""){
+        document.getElementById("error_nombre").textContent = "Ingrese el nombre del curso";
+        nombre.classList.add("input-error");
+        valido = false;
+    }
+
+
+    // MODALIDAD
+    let modalidad = document.querySelector('input[name="modalidad"]:checked');
+    if(!modalidad){
+        document.getElementById("error_modalidad").textContent = "Seleccione una modalidad";
+        valido = false;
+    }
+
+
+    // CATEGORIA
+    let categoria = document.getElementById("categoria");
+    if(categoria.value === ""){
+        document.getElementById("error_categoria").textContent = "Seleccione una categoría";
+        categoria.classList.add("input-error");
+        valido = false;
+    }
+
+
+    // FECHA
+    let fecha = document.getElementById("fecha");
+    if(fecha.value === ""){
+        document.getElementById("error_fecha").textContent = "Seleccione una fecha";
+        fecha.classList.add("input-error");
+        valido = false;
+    }
+
+
+    if(!valido){
+        e.preventDefault();
+    }
+
+});
+
+</script>
+
+
+{% if messages %}
+<script>
+{% for message in messages %}
+    Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: "{{ message }}"
+    });
+{% endfor %}
+</script>
+{% endif %}
+
+{% endblock %}
