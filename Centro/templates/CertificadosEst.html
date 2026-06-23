@@ -1,0 +1,114 @@
+{% extends 'EstudianteGeneral.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<section class="section-padding" style="background:#f8f9fa; min-height:100vh;">
+
+<div class="container">
+
+    <!-- TITULO -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+
+            <h2 style="font-weight:700;">
+                Mis Certificados
+            </h2>
+
+            <p>
+                Aquí puedes visualizar y descargar tus certificados generados.
+            </p>
+
+        </div>
+    </div>
+
+    <!-- TABLA -->
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover" id="certificadosTable">
+
+                    <thead style="background:#0d6efd; color:white;">
+                        <tr>
+                            <th>ID</th>
+                            <th>Curso</th>
+                            <th>Fecha Emisión</th>
+                            <th>Calificación</th>
+                            <th>Estado</th>
+                            <th>PDF</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for c in certificados %}
+                        <tr>
+
+                            <td>{{ c.id }}</td>
+
+                            <td>{{ c.curso.nombre }}</td>
+
+                            <td>{{ c.fecha_emision }}</td>
+
+                            <td>{{ c.calificacion_final }}</td>
+
+                            <td>{{ c.estado_documento }}</td>
+
+                            <td>
+                                {% if c.archivo_pdf %}
+                                <a href="{{ c.archivo_pdf.url }}"
+                                   target="_blank"
+                                   class="btn btn-danger btn-sm">
+                                    Descargar PDF
+                                </a>
+                                {% else %}
+                                    Sin archivo
+                                {% endif %}
+                            </td>
+
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">
+                                No tienes certificados registrados
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    new DataTable("#certificadosTable", {
+        language: {
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ certificados",
+            paginate: {
+                first: "Primero",
+                last: "Último",
+                next: "Siguiente",
+                previous: "Anterior"
+            },
+            zeroRecords: "No se encontraron resultados"
+        }
+    });
+
+});
+</script>
+
+{% endblock %}
